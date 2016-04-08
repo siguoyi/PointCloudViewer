@@ -7,10 +7,12 @@ uniform vec3 vBrightness;
 
 varying float texEnabled;
 varying float lightsEnabled;
+varying float colEnabled;
 varying vec3 lightPosEye;
 varying vec3 normalEye; 
 varying vec3 vertEye;
 varying vec2 texCoords;
+varying vec4 v_color;
 
 void main() { 
 
@@ -65,5 +67,10 @@ void main() {
 	
 	texDiff = vec4(Id, 1.0) * texel;
 	
-	gl_FragColor = texAmb + texDiff;
+	if(colEnabled > 0.5){
+		gl_FragColor = v_color;
+	}else{
+		gl_FragColor = texAmb + texDiff;
+	}
+	
 }

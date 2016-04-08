@@ -1,10 +1,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <item
+   <!-- <item
         android:id="@+id/toggle_wireframe_id"
         android:showAsAction="always"
         android:title="@string/toggle_wireframe"
         android:icon="@drawable/ball_icon"/>
+    -->
 
     <!--
             <item android:id="@+id/brightness_up_id"
@@ -31,11 +32,13 @@
         android:showAsAction="always"
         android:title="@string/projection_view_text"
         android:icon="@drawable/perspective_view_icon_thick"/>
+    
     <item
-        android:id="@+id/open_file_id"
-        android:showAsAction="always"
-        android:title="@string/load_obj"
-        android:icon="@drawable/folder_icon_custom_dark"/>
+		        android:id="@+id/open_file_id"
+		        android:showAsAction="always"
+		        android:title="@string/load_obj"
+		        android:icon="@drawable/folder_icon_custom_dark"/>
+    
 
     <!-- Overflow menu -->
     <item
@@ -59,11 +62,7 @@
             <item
                 android:id="@+id/settings_push_id"
                 android:title="@string/settings"
-                android:icon="@drawable/settings_icon"/>
-            <item
-                android:id="@+id/about_push_id"
-                android:title="@string/about"
-                android:icon="@drawable/question_icon"/>
+                android:icon="@drawable/settings_icon"/>            
         </menu>
     </item>
 

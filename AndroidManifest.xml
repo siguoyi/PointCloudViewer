@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.ubertome.objview"
+    package="edu.buptant.pointscloudviewer"
     android:versionCode="1"
     android:versionName="1.0" >
 	
@@ -31,13 +31,14 @@
         
         <!-- to force Fullscreen, set theme to @android:style/Theme.Holo.NoActionBar-->
         <activity
-            android:name="com.ubertome.objview.MainActivity"
+            android:name="edu.buptant.pointscloudviewer.MainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:uiOptions="splitActionBarWhenNarrow"
+            android:screenOrientation="portrait"
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
+                  
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

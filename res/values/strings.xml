@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">ObjView</string>
+    <string name="app_name">PointsCloudViewer</string>
     
     <string name="about">About/Help</string>
     <string name="about_text">This app is a 3D model viewer that displays high resolution meshes that you can interact with. If you do find any issues or have comments on improvement feel free to contact me at bugs.ubertome@gmail.com.</string>
