@@ -239,7 +239,6 @@ public class Mesh {
 		
 		//enable vertex attrib array
 		GLES20.glEnableVertexAttribArray(mPositionHandle);
-		
 		//load up coordinate data
 		GLES20.glVertexAttribPointer(mPositionHandle, COORDS_PER_VERTEX, 
 				GLES20.GL_FLOAT, false, 0, meshVertBuffer);
@@ -250,7 +249,6 @@ public class Mesh {
 			GLES20.glEnableVertexAttribArray(mColorHandle);
 			GLES20.glVertexAttribPointer(mColorHandle, 4, GLES20.GL_FLOAT, false, 0, colBuffer);
 		}
-		
 		//Normals
 		mNormalHandle = GLES20.glGetAttribLocation(mProgram, "vNormal");
 		GLES20.glEnableVertexAttribArray(mNormalHandle);
@@ -308,10 +306,27 @@ public class Mesh {
 		GLES20.glUniform4f(GLES20.glGetUniformLocation(mProgram, "lightPosVec"), 0.0f, 1.0f, 3.0f, 0.0f);
 		
 		GLES20.glUniform3fv(GLES20.glGetUniformLocation(mProgram, "vBrightness"), 1, brightness, 0);
-		
+		Log.d("draw", "meshVerts.length: " + meshVerts.length);
+				
 		//draw!
 		if(RendererGL.file_type == 1){
-			GLES20.glDrawArrays(GLES20.GL_POINTS, 0, meshVerts.length/COORDS_PER_VERTEX);
+			GLES20.glDrawArrays(GLES20.GL_POINTS, 0, 1000);
+//			GLES20.glDrawElements(GLES20.GL_POINTS, meshVerts.length/COORDS_PER_VERTEX, 
+//												GLES20.GL_UNSIGNED_SHORT, 0);
+//			GLES20.glDrawArrays(GLES20.GL_POINTS, 0, meshVerts.length/COORDS_PER_VERTEX);
+//			int drawNumbers = meshVerts.length/COORDS_PER_VERTEX;
+//			int threshold = 1000;
+//			int drawPosition = 0;
+//			while(drawNumbers >= threshold){
+//				GLES20.glDrawArrays(GLES20.GL_POINTS, drawPosition, threshold);
+//				drawNumbers -= threshold;
+//				drawPosition += threshold;
+//			}
+//			
+//			if((drawNumbers < threshold) && (drawNumbers > 0)){
+//				GLES20.glDrawArrays(GLES20.GL_POINTS, drawPosition, drawNumbers);
+//			}
+			
 		}else{
 			GLES20.glDrawArrays(
 					(enableWireframe) ? GLES20.GL_LINE_STRIP : GLES20.GL_TRIANGLES, 

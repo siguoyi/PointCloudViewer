@@ -12,6 +12,7 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -48,13 +49,13 @@ import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import edu.buptant.pointscloudviewer.GLUtils;
 import edu.buptant.pointscloudviewer.Vector3;
 import edu.buptant.pointscloudviewer.MainActivity.ActionIcons;
 import edu.buptant.pointscloudviewer.RendererGL.RotationAxis;
 
 public class RenderFragment extends Fragment {
+	private static final String TAG = RenderFragment.class.getSimpleName();
 
 	private Context mContext;
 	private CustomGLView mGLView;
@@ -121,7 +122,6 @@ public class RenderFragment extends Fragment {
 		}else if(fileType.equals("csv")){
 			pointSet = new PointSet(mModelPath, texturePath);
 		}
-//		pointSet = new PointSet(mModelPath, texturePath);
 		Log.d("filePath", " "+mModelPath);
 		
 //		enableFullscreen();
@@ -179,12 +179,13 @@ public class RenderFragment extends Fragment {
 					pointSet.parse();
 					mGLView.loadModel(pointSet);
 				}
-//				parsedModel.parse();
-//				pointSet.parse();
-//				mGLView.loadModel(parsedModel);
 				
-
-				mGLView.requestRender();
+				try {
+					mGLView.requestRender();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				
 			}
 		});
 		parseThread.start();
@@ -198,10 +199,11 @@ public class RenderFragment extends Fragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
+		Log.d(TAG, "RenderFragment onCreate");
 		setHasOptionsMenu(true);
 		settingsFrag = new SettingsFragment();
 		explorerFrag = new FileExplorerFragment();
-		
+		getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		Bundle bundle = getArguments();
 		if(bundle != null){
 			String modelPath = bundle.getString(FileExplorerFragment.fileToParse),
@@ -210,7 +212,6 @@ public class RenderFragment extends Fragment {
 				if(explorerDialog != null){
 					explorerDialog.dismiss();
 				}
-				//recentDialog.dismiss();
 				parseModelFile(modelPath, texturePath, fileType);
 		}
 		
@@ -218,6 +219,7 @@ public class RenderFragment extends Fragment {
 	
 	@Override
 	public View onCreateView(LayoutInflater layoutInflater, ViewGroup container, Bundle savedInstanceState){
+		Log.d(TAG, "RenderFragment onCreateView");
 		renderConfig = new RenderConfig();
 		mGLView = new CustomGLView(getActivity());
 		return mGLView;
@@ -226,52 +228,19 @@ public class RenderFragment extends Fragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		Log.d(TAG, "RenderFragment onActivityCreated");
 		FragmentManager fm = getFragmentManager();
 		FragmentTransaction ft = fm.beginTransaction();
 		ft.add(settingsFrag,"settings_tag")
 		.add(explorerFrag,"explorer_tag")
 		.commit();
 		settingsFrag.setRenderConfig(renderConfig);
-//		actionListItems = ((MainActivity)getActivity()).getActionItemArray();
 	}
 
-	/**
-	 * This method is called when {@link android:configChanges} has been
-	 * specified for the activity in {@link AndroidManifest.xml}. Even then,
-	 * only the configurations specified will cause {@link
-	 * onConfigurationChanged(Configuration)}. Also, {@link
-	 * super.onConfigurationChanged(Configuration)} must be called first <br/>
-	 * <br/>
-	 * e.g. If screen orientation changes and {@link android:configChanges =
-	 * "orientation"}, then this method will only be called when screen
-	 * orientation changes. Otherwise, the activity will be restarted and will
-	 * call {@link onCreate(Bundle)}
-	 * 
-	 * @param config
-	 * @see <a
-	 *      href="http://developer.android.com/reference/android/app/Activity.html#onConfigurationChanged(android.content.res.Configuration)">More
-	 *      bout this here</a>
-	 */
 	@Override
 	public void onConfigurationChanged(Configuration config) {
 		super.onConfigurationChanged(config);
 		
-//		enableFullscreen();
-//		getActivity().getActionBar().show();
-/*		if (doneLoading) {
-			
-//			setContentView(mGLView);
-
-			// TextView modelPathText = (TextView)
-			// findViewById(R.id.render_path_id);
-			// modelPathText.setText(modelPath);
-
-//			mGLView.loadModel(parsedModel);
-			
-//			Toast.makeText(mContext, "progress: " + parsedModel.getProgress()
-//													+"\nFaces: " + parsedModel.getAltProgress(), Toast.LENGTH_LONG).show();
-		}*/
-//		mGLView = new CustomGLView(getActivity());
 		mRenderer.rotationAngle = 0f;
 		WINDOW_WIDTH = getWindowWidth();
 		WINDOW_HEIGHT = getWindowHeight();
@@ -296,10 +265,6 @@ public class RenderFragment extends Fragment {
 		doneLoading = false;
 	}
 	
-//	@Override
-//	public void onDestroy(){
-//		
-//	}
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -314,19 +279,6 @@ public class RenderFragment extends Fragment {
 		// handle items selected from menu
 		switch (item.getItemId()) {
 
-//		case R.id.toggle_wireframe_id: {
-//			MenuItem toggleWireframeItem = menu.findItem(R.id.toggle_wireframe_id);
-//			if (!renderConfig.isWireframeEnabled()){
-//				toggleWireframeItem.setIcon(ActionIcons.BALL_WIREFRAME.getValue()
-//						);
-//			}
-//			else {
-//				toggleWireframeItem.setIcon(ActionIcons.BALL.getValue()
-//						);
-//			}
-//			renderConfig.toggleWireframe();
-//			break;
-//		}
 		case R.id.brightness_adjust_id:{	
 			Log.d("brightness", "brightness");
 			LinearLayout layout = new LinearLayout(getActivity());
@@ -376,13 +328,6 @@ public class RenderFragment extends Fragment {
 				WindowManager.LayoutParams dialogParams = dialogWindow.getAttributes();
 				dialogWindow.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
 				
-//					int screenOrientation = getResources().getConfiguration().orientation;
-//					if(screenOrientation == Configuration.ORIENTATION_PORTRAIT){
-//					    
-//					}
-//					else{
-//						dialogParams.gravity = Gravity.TOP;
-//					}
 				dialogParams.gravity = Gravity.BOTTOM;
 				dialogParams.y = 100;
 			    brightnessDialog.show();
@@ -402,11 +347,6 @@ public class RenderFragment extends Fragment {
 			renderConfig.toggleLighting();
 			break;
 		}
-//		case R.id.texture_select_id: {
-//			// open a DialogFragment
-//
-//			break;
-//		}
 		case R.id.projection_view_id:{
 			MenuItem toggle_projectionItem = menu.findItem(R.id.projection_view_id);
 			if(renderConfig.isOrthoView())
@@ -523,11 +463,6 @@ public class RenderFragment extends Fragment {
 			}
 			break;
 		}
-//		case R.id.about_push_id:{
-//			FragmentManager fm = getFragmentManager();
-//			aboutFrag.show(fm, "about_tag");
-//			break;
-//		}
 
 		default:
 			return super.onOptionsItemSelected(item);
@@ -559,7 +494,6 @@ public class RenderFragment extends Fragment {
 		if(explorerDialog != null){
 			explorerDialog.dismiss();
 		}
-		//recentDialog.dismiss();
 		parseModelFile(modelPath, texturePath,fileType);
 	}
 	
@@ -739,14 +673,13 @@ public class RenderFragment extends Fragment {
 
 		public CustomGLView(Context context) {
 			super(context);
-
+			Log.d(TAG, "CustomGLView");
 			// Resources res = context.getResources();
 			// AssetManager assetManager = context.getAssets();
 			WINDOW_WIDTH = getWindowWidth();
 			WINDOW_HEIGHT = getWindowHeight();
 
-			pinchToScale = new ScaleGestureDetector(context,
-					new ScaleListener());
+			pinchToScale = new ScaleGestureDetector(context, new ScaleListener());
 			
 			pointer1 = new PointF();
 			pointer1Old = new PointF();
@@ -761,9 +694,10 @@ public class RenderFragment extends Fragment {
 //			mvMatrix = new Matrix3();
 
 			// create OpenGL ES 2.0 context
+//			setEGLContextClientVersion(2);
+//			super.setEGLConfigChooser(8 , 8, 8, 8, 16, 0);
 			setEGLContextClientVersion(2);
-			super.setEGLConfigChooser(8 , 8, 8, 8, 16, 0);
-
+			setEGLConfigChooser(8,8,8,8,16,0);
 			// set the Renderer to draw on this surfaceView
 			setRenderer(mRenderer = new RendererGL(context, renderConfig));
 
@@ -772,14 +706,6 @@ public class RenderFragment extends Fragment {
 			setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
 		}
 
-//		@Override
-//		public void onScreenStateChanged(int screenState){
-//			if(screenState == SCREEN_STATE_OFF){
-//				this.onPause();
-//			}
-//			else 
-//				this.onResume();
-//		}
 
 		@Override
 		public boolean onTouchEvent(MotionEvent e) {
@@ -1017,14 +943,6 @@ public class RenderFragment extends Fragment {
 
 		}
 		
-/*		private class DragListener extends GestureDetector.SimpleOnGestureListener {
-			
-			@Override
-			public boolean onScroll(MotionEvent e1, MotionEvent e2, float distX, float distY){
-				
-				return true;
-			}
-		}*/
 		
 
 		public void loadModel(PointSet pointSet){
@@ -1033,7 +951,6 @@ public class RenderFragment extends Fragment {
 
 		public void loadModel(ParsedObj obj) {
 			mRenderer.loadModel(obj);
-			// requestRender();
 		}
 
 		public void requestGLRender() {
@@ -1085,8 +1002,6 @@ public class RenderFragment extends Fragment {
 					currentProgress = pointSet.getProgress();
 					maxProgress = pointSet.getProgressMax();
 				}
-//				currentProgress = pointSet.getProgress();
-//				maxProgress = pointSet.getProgressMax();
 			}
 			return null;
 		}

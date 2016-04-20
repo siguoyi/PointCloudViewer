@@ -181,9 +181,6 @@ public class MainActivity extends Activity implements FileExplorerFragment.FragT
 					ft.show(renderFrag);
 					ft.commit();
 					getActionBar().show();
-					setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
-					
-					
 				}
 			}
 		}, 0);

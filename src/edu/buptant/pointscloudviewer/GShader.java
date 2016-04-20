@@ -4,11 +4,13 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import android.content.res.AssetManager;
 
+import android.content.res.AssetManager;
 import android.opengl.GLES20;
+import android.util.Log;
 
 public class GShader {
+	private static final String TAG = GShader.class.getSimpleName();
 
 	private int mHandle;
 	private int type;
@@ -32,8 +34,6 @@ public class GShader {
 		this.filename = filename;
 		this.type = type;
 		this.ass = assets;
-		
-		
 		loadShader();
 	}
 /**
@@ -51,7 +51,6 @@ public class GShader {
 		shaderCode = convertIStreamToString(is).replaceAll("\r\n", "");
 		
 		mHandle = GLES20.glCreateShader(type);
-		
 		GLES20.glShaderSource(mHandle, shaderCode);
 		GLES20.glCompileShader(mHandle);
 		checkForErrors();
@@ -67,6 +66,7 @@ public class GShader {
 	 * Checks for shader compile errors; any errors are recorded in {@code output.txt}
 	 */
 	private void checkForErrors(){
+		Log.d(TAG, "check");
 		int params[] = new int[1];
 		String errorMessage;
 		try {

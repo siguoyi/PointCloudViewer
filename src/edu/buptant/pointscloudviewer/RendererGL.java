@@ -19,11 +19,12 @@ import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
 import android.preference.PreferenceManager;
 import android.renderscript.Matrix3f;
-
+import android.util.Log;
 import edu.buptant.pointscloudviewer.GLUtils;
 import edu.buptant.pointscloudviewer.RenderFragment.RenderConfig;
 
 public class RendererGL implements GLSurfaceView.Renderer{
+	private static final String TAG = RendererGL.class.getSimpleName();
 	
 	public static final float PI = 3.141592f;
 	public static final float RAD2DEG = (180f/PI);
@@ -109,13 +110,14 @@ public class RendererGL implements GLSurfaceView.Renderer{
 //	}
 	
 	public RendererGL(Context context, RenderConfig configs){
+		Log.d(TAG, "RendererGL");
 		this.context = context;
-		this.asm = context.getAssets();
+		this.asm = context.getResources().getAssets();
 		renderConfig = configs;
-		vert = new GShader(asm, "shaders/render.vert", GLES20.GL_VERTEX_SHADER);
-		frag = new GShader(asm, "shaders/render.frag", GLES20.GL_FRAGMENT_SHADER);
-		sp = new ShaderProgram(vert, frag);
-		Mesh.setShaderProgram(mProgramHandle = sp.getHandle());
+//		vert = new GShader(asm, "shaders/render.vert", GLES20.GL_VERTEX_SHADER);
+//		frag = new GShader(asm, "shaders/render.frag", GLES20.GL_FRAGMENT_SHADER);
+//		sp = new ShaderProgram(vert, frag);
+//		Mesh.setShaderProgram(mProgramHandle = sp.getHandle());
 		modelMatrixQ = new Quaternion();
 		rotMatrixQ = new Quaternion();
 		freeRotQ = new Quaternion();
@@ -162,7 +164,6 @@ public class RendererGL implements GLSurfaceView.Renderer{
 		//sets background frame colour
 //		GLES20.glClearColor(0.8f, 0.3f, 0.3f, 1.0f);
 		GLES20.glClearColor(red, green, blue, alpha);
-		
 //		initShaders();
 		
 		vert = new GShader(asm, "shaders/render.vert", GLES20.GL_VERTEX_SHADER);
@@ -410,9 +411,9 @@ public class RendererGL implements GLSurfaceView.Renderer{
 		}
 	}
 	
-	private void updateModelMatrix(float angleX, float angleY){
+//	private void updateModelMatrix(float angleX, float angleY){
 //		accumAngleY += angleY - 
-	}
+//	}
 	
 //	private void updateModelMatrix(){
 //		xAccumAngle += xAngle - xLastAngle;
@@ -428,6 +429,7 @@ public class RendererGL implements GLSurfaceView.Renderer{
 //				pinchAccumScale, pinchAccumScale);
 //		pinchLastScale = pinchScaleFactor;
 //	}
+	
 	
 	@Override
 	public void onSurfaceChanged(GL10 unused, int width, int height){
