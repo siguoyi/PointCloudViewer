@@ -1,5 +1,8 @@
 package edu.buptant.pointscloudviewer;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Vector;
@@ -53,6 +56,7 @@ import edu.buptant.pointscloudviewer.GLUtils;
 import edu.buptant.pointscloudviewer.Vector3;
 import edu.buptant.pointscloudviewer.MainActivity.ActionIcons;
 import edu.buptant.pointscloudviewer.RendererGL.RotationAxis;
+import edu.buptant.timestatistic.TimeStatistics;
 
 public class RenderFragment extends Fragment {
 	private static final String TAG = RenderFragment.class.getSimpleName();
@@ -172,11 +176,14 @@ public class RenderFragment extends Fragment {
 			@Override
 			public void run() {
 				elapsedTime.startTime();
+				TimeStatistics.parseStartTime = System.currentTimeMillis();
 				if(fileType.equals("obj")){
 					parsedModel.parse();
+					TimeStatistics.parseCompleteTime = System.currentTimeMillis();
 					mGLView.loadModel(parsedModel);
 				}else if(fileType.equals("csv")){
 					pointSet.parse();
+					TimeStatistics.parseCompleteTime = System.currentTimeMillis();
 					mGLView.loadModel(pointSet);
 				}
 				
@@ -920,7 +927,7 @@ public class RenderFragment extends Fragment {
 
 			return true;
 		}
-
+		
 		// Listener class for pinch-zoom gestures
 		private class ScaleListener extends
 				ScaleGestureDetector.SimpleOnScaleGestureListener {
@@ -966,11 +973,29 @@ public class RenderFragment extends Fragment {
 	 * ***********************************************************************/
 
 	public class ProgressBarTask extends AsyncTask<Void, Integer, Void> {
+		
+		public void saveToSDcard(){
+			String filename = "time_statistic.txt";
+			long parseTime = TimeStatistics.parseCompleteTime - TimeStatistics.parseStartTime;
+			long loadTime = TimeStatistics.loadCompleteTime - TimeStatistics.loadStartTime;
+			String s = parseTime + "\t" + loadTime + "\n";
+			try {
+				FileOutputStream fos = getActivity().openFileOutput(filename, Context.MODE_APPEND);
+				fos.write(s.getBytes());
+				fos.flush();
+				fos.close();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 
 		@Override
 		protected void onPreExecute() {
 			Toast.makeText(getActivity(), "Loading Mesh...",
 					Toast.LENGTH_SHORT).show();
+			TimeStatistics.loadStartTime = System.currentTimeMillis();
 			TextView text = (TextView) progressDialog.findViewById(R.id.loading_text_id);
 			text.setTextSize(16);
 			text.setTextColor(Color.argb(255, 255, 255, 255));
@@ -1015,8 +1040,10 @@ public class RenderFragment extends Fragment {
 		@Override
 		protected void onPostExecute(Void Result) {
 			elapsedTime.stopTime();
+			TimeStatistics.loadCompleteTime = System.currentTimeMillis();
 			Toast.makeText(getActivity(), "Done!\nLoading Time: "+ String.format("%.3f",elapsedTime.getElapsedFloat()) + " seconds", Toast.LENGTH_LONG)
 					.show();
+			saveToSDcard();
 			TextView text = (TextView) progressDialog.findViewById(R.id.loading_text_id);
 			text.setTextSize(16);
 			text.setText("Done!");

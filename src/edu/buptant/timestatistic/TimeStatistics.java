@@ -1,7 +1,7 @@
 package edu.buptant.timestatistic;
 
-public class TimeStatistic {
-	private static final String TAG = TimeStatistic.class.getSimpleName();
+public class TimeStatistics {
+	private static final String TAG = TimeStatistics.class.getSimpleName();
 	
 	public static long parseStartTime;
 	public static long parseCompleteTime;
@@ -11,25 +11,25 @@ public class TimeStatistic {
 		return parseStartTime;
 	}
 	public static void setParseStartTime(long parseStartTime) {
-		TimeStatistic.parseStartTime = parseStartTime;
+		TimeStatistics.parseStartTime = parseStartTime;
 	}
 	public static long getParseCompleteTime() {
 		return parseCompleteTime;
 	}
 	public static void setParseCompleteTime(long parseCompleteTime) {
-		TimeStatistic.parseCompleteTime = parseCompleteTime;
+		TimeStatistics.parseCompleteTime = parseCompleteTime;
 	}
 	public static long getLoadStartTime() {
 		return loadStartTime;
 	}
 	public static void setLoadStartTime(long loadStartTime) {
-		TimeStatistic.loadStartTime = loadStartTime;
+		TimeStatistics.loadStartTime = loadStartTime;
 	}
 	public static long getLoadCompleteTime() {
 		return loadCompleteTime;
 	}
 	public static void setLoadCompleteTime(long loadCompleteTime) {
-		TimeStatistic.loadCompleteTime = loadCompleteTime;
+		TimeStatistics.loadCompleteTime = loadCompleteTime;
 	}
 	
 	
