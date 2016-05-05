@@ -1,4 +1,4 @@
-package edu.buptant.timestatistic;
+package edu.buptant.statistics;
 
 public class TimeStatistics {
 	private static final String TAG = TimeStatistics.class.getSimpleName();

@@ -1,9 +1,12 @@
 package edu.buptant.pointscloudviewer;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Vector;
@@ -58,7 +61,8 @@ import edu.buptant.pointscloudviewer.GLUtils;
 import edu.buptant.pointscloudviewer.Vector3;
 import edu.buptant.pointscloudviewer.MainActivity.ActionIcons;
 import edu.buptant.pointscloudviewer.RendererGL.RotationAxis;
-import edu.buptant.timestatistic.TimeStatistics;
+import edu.buptant.statistics.CpuStatistics;
+import edu.buptant.statistics.TimeStatistics;
 
 public class RenderFragment extends Fragment {
 	private static final String TAG = RenderFragment.class.getSimpleName();
@@ -81,10 +85,10 @@ public class RenderFragment extends Fragment {
 	public PointSet pointSet = null;
 	private String file_type;
 	
-	private static String timeStatisticPath = Environment.getExternalStorageDirectory().getAbsolutePath() 
-			+ File.separator +"time_statistic";
+	private static String statisticPath = Environment.getExternalStorageDirectory().getAbsolutePath() 
+			+ File.separator +"statistics";
 
-	private static File saveTimePath = new File(timeStatisticPath);
+	private static File saveTimePath = new File(statisticPath);
 
 	private volatile boolean parsingDone = false;
 	volatile ProgressBar parsingProgress;
@@ -184,6 +188,8 @@ public class RenderFragment extends Fragment {
 			public void run() {
 				elapsedTime.startTime();
 				TimeStatistics.parseStartTime = System.currentTimeMillis();
+				CpuStatistics.parse_totalCpuTime1 = getTotalCpuTime();
+				CpuStatistics.parse_processCpuTime1 = getAppCpuTime();
 				if(fileType.equals("obj")){
 					parsedModel.parse();
 					mGLView.loadModel(parsedModel);
@@ -974,6 +980,56 @@ public class RenderFragment extends Fragment {
 		
 	}
 
+	public static float getProcessCpuRate(long totalCpuTime1, long processCpuTime1, long totalCpuTime2, long processCpuTime2){
+        
+	       float cpuRate = 100 * (processCpuTime2 - processCpuTime1)
+	               / (totalCpuTime2 - totalCpuTime1);
+	         
+	       return cpuRate;
+	   }
+	     
+	   public static long getTotalCpuTime(){ // 获取系统总CPU使用时间
+	       String[] cpuInfos = null;
+	       try
+	       {
+	           BufferedReader reader = new BufferedReader(new InputStreamReader(
+	                   new FileInputStream("/proc/stat")), 1000);
+	           String load = reader.readLine();
+	           reader.close();
+	           cpuInfos = load.split(" ");
+	       }
+	       catch (IOException ex)
+	       {
+	           ex.printStackTrace();
+	       }
+	       long totalCpu = Long.parseLong(cpuInfos[2])
+	               + Long.parseLong(cpuInfos[3]) + Long.parseLong(cpuInfos[4])
+	               + Long.parseLong(cpuInfos[6]) + Long.parseLong(cpuInfos[5])
+	               + Long.parseLong(cpuInfos[7]) + Long.parseLong(cpuInfos[8]);
+	       return totalCpu;
+	   }
+	     
+	   public static long getAppCpuTime(){ // 获取应用占用的CPU时间
+	       String[] cpuInfos = null;
+	       try
+	       {
+	           int pid = android.os.Process.myPid();
+	           BufferedReader reader = new BufferedReader(new InputStreamReader(
+	                   new FileInputStream("/proc/" + pid + "/stat")), 1000);
+	           String load = reader.readLine();
+	           reader.close();
+	           cpuInfos = load.split(" ");
+	       }
+	       catch (IOException ex)
+	       {
+	           ex.printStackTrace();
+	       }
+	       long appCpuTime = Long.parseLong(cpuInfos[13])
+	               + Long.parseLong(cpuInfos[14]) + Long.parseLong(cpuInfos[15])
+	               + Long.parseLong(cpuInfos[16]);
+	       return appCpuTime;
+	   }
+	
 	/*************************************************************************
 	 * 
 	 * Progress Bar
@@ -982,9 +1038,39 @@ public class RenderFragment extends Fragment {
 
 	public class ProgressBarTask extends AsyncTask<Void, Integer, Void> {
 		
-		public void saveToSDcard(){
-			String filename = "time_statistic.txt";
-			String filepath = timeStatisticPath + File.separator + filename;
+		private void saveCPUToSDcard(){
+			String filename = "cpu_statistics.txt";
+			
+			String filepath = statisticPath + File.separator + filename;
+			File file = new File(filepath);
+			if(!file.exists()){
+				try {
+					file.createNewFile();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			float parseCPU = getProcessCpuRate(CpuStatistics.parse_totalCpuTime1, CpuStatistics.parse_processCpuTime1, 
+									CpuStatistics.parse_totalCpuTime2, CpuStatistics.parse_processCpuTime2);	
+			
+			String s = parseCPU + "%\n";
+			Log.d(TAG, "cpu statistics: " + s);
+			
+			try {
+				FileOutputStream fos = new FileOutputStream(file, true);
+				fos.write(s.getBytes());
+				fos.flush();
+				fos.close();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		public void saveTimeToSDcard(){
+			String filename = "time_statistics.txt";
+			String filepath = statisticPath + File.separator + filename;
 			File file = new File(filepath);
 			if(!file.exists()){
 				try {
@@ -1057,10 +1143,13 @@ public class RenderFragment extends Fragment {
 		protected void onPostExecute(Void Result) {
 			elapsedTime.stopTime();
 			TimeStatistics.parseCompleteTime = System.currentTimeMillis();
+			CpuStatistics.parse_totalCpuTime2 = getTotalCpuTime();
+			CpuStatistics.parse_processCpuTime2 = getAppCpuTime();
 			Toast.makeText(getActivity(), "Done!\nLoading Time: "+ String.format("%.3f",elapsedTime.getElapsedFloat()) + " seconds", Toast.LENGTH_LONG)
 					.show();
 			if(MainActivity.isFromMCCam){
-				saveToSDcard();
+				saveTimeToSDcard();
+				saveCPUToSDcard();
 				MainActivity.isFromMCCam = false;
 			}
 			TextView text = (TextView) progressDialog.findViewById(R.id.loading_text_id);
