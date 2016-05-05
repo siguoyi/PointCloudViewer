@@ -7,7 +7,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
         
     <uses-sdk
-        android:minSdkVersion="14"
+        android:minSdkVersion="18"
         android:targetSdkVersion="23" />
 
     <!--
@@ -15,7 +15,7 @@
     	 With this line, Google Play will prevent users from installing the app 
     	 on devices that do not support at least GLES 2.0 
     -->
-    <uses-feature android:glEsVersion="0x00020000" android:required="true" />
+    <uses-feature android:glEsVersion="0x00030000" android:required="true" />
 
     <!-- declare which texture compression formats will be used -->
     <supports-gl-texture android:name="GL_OES_compressed_ETC1_RGB8_texture" />
@@ -28,7 +28,6 @@
         android:theme="@style/AppTheme"
         >
         
-        <!-- to force Fullscreen, set theme to @android:style/Theme.Holo.NoActionBar-->
         <activity
             android:name="edu.buptant.pointscloudviewer.MainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"

@@ -299,10 +299,6 @@ public class Mesh {
 		mViewMatrixHandle = GLES20.glGetUniformLocation(mProgram, "mViewMatrix");
 		GLES20.glUniformMatrix4fv(mViewMatrixHandle, 1, false, mViewMatrix, 0);
 		
-//		//load normal Matrix
-//		GLES20.glUniformMatrix4fv(
-//				GLES20.glGetUniformLocation(mProgram, "normalMatrix"), 1, false, mNormalMatrix, 0);
-		
 		GLES20.glUniform4f(GLES20.glGetUniformLocation(mProgram, "lightPosVec"), 0.0f, 1.0f, 3.0f, 0.0f);
 		
 		GLES20.glUniform3fv(GLES20.glGetUniformLocation(mProgram, "vBrightness"), 1, brightness, 0);
@@ -310,22 +306,11 @@ public class Mesh {
 				
 		//draw!
 		if(RendererGL.file_type == 1){
-			GLES20.glDrawArrays(GLES20.GL_POINTS, 0, 1000);
+//			GLES20.glDrawArrays(GLES20.GL_POINTS, 0, 2000);
+//			Log.d("draw", "meshVertBuffer.capacity(): " + meshVerts.length/COORDS_PER_VERTEX);
 //			GLES20.glDrawElements(GLES20.GL_POINTS, meshVerts.length/COORDS_PER_VERTEX, 
 //												GLES20.GL_UNSIGNED_SHORT, 0);
-//			GLES20.glDrawArrays(GLES20.GL_POINTS, 0, meshVerts.length/COORDS_PER_VERTEX);
-//			int drawNumbers = meshVerts.length/COORDS_PER_VERTEX;
-//			int threshold = 1000;
-//			int drawPosition = 0;
-//			while(drawNumbers >= threshold){
-//				GLES20.glDrawArrays(GLES20.GL_POINTS, drawPosition, threshold);
-//				drawNumbers -= threshold;
-//				drawPosition += threshold;
-//			}
-//			
-//			if((drawNumbers < threshold) && (drawNumbers > 0)){
-//				GLES20.glDrawArrays(GLES20.GL_POINTS, drawPosition, drawNumbers);
-//			}
+			GLES20.glDrawArrays(GLES20.GL_POINTS, 0, meshVerts.length/COORDS_PER_VERTEX);
 			
 		}else{
 			GLES20.glDrawArrays(
