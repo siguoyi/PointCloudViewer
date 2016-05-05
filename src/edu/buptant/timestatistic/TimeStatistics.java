@@ -5,8 +5,7 @@ public class TimeStatistics {
 	
 	public static long parseStartTime;
 	public static long parseCompleteTime;
-	public static long loadStartTime;
-	public static long loadCompleteTime;
+
 	public static long getParseStartTime() {
 		return parseStartTime;
 	}
@@ -19,18 +18,5 @@ public class TimeStatistics {
 	public static void setParseCompleteTime(long parseCompleteTime) {
 		TimeStatistics.parseCompleteTime = parseCompleteTime;
 	}
-	public static long getLoadStartTime() {
-		return loadStartTime;
-	}
-	public static void setLoadStartTime(long loadStartTime) {
-		TimeStatistics.loadStartTime = loadStartTime;
-	}
-	public static long getLoadCompleteTime() {
-		return loadCompleteTime;
-	}
-	public static void setLoadCompleteTime(long loadCompleteTime) {
-		TimeStatistics.loadCompleteTime = loadCompleteTime;
-	}
-	
 	
 }

@@ -58,6 +58,8 @@ public class MainActivity extends Activity implements FileExplorerFragment.FragT
 	SettingsFragment settingsFragment;
 	RenderFragment renderFrag;
 	
+	public static boolean isFromMCCam = false;
+	
 	public enum ActionIcons {
 			BALL_WIREFRAME(R.drawable.ball_wireframe_icon), 
 			BALL(R.drawable.ball_icon), 
@@ -162,6 +164,7 @@ public class MainActivity extends Activity implements FileExplorerFragment.FragT
 					Intent intent = getIntent();
 					String content = intent.getStringExtra("filePath");
 					if(content != null){
+						isFromMCCam = true;
 						Log.d("filePath type", "filePath: " + content);
 						Bundle bundle = new Bundle();
 						bundle.putString(FileExplorerFragment.fileToParse, content);

@@ -186,11 +186,9 @@ public class RenderFragment extends Fragment {
 				TimeStatistics.parseStartTime = System.currentTimeMillis();
 				if(fileType.equals("obj")){
 					parsedModel.parse();
-					TimeStatistics.parseCompleteTime = System.currentTimeMillis();
 					mGLView.loadModel(parsedModel);
 				}else if(fileType.equals("csv")){
 					pointSet.parse();
-					TimeStatistics.parseCompleteTime = System.currentTimeMillis();
 					mGLView.loadModel(pointSet);
 				}
 				
@@ -996,8 +994,7 @@ public class RenderFragment extends Fragment {
 				}
 			}
 			long parseTime = TimeStatistics.parseCompleteTime - TimeStatistics.parseStartTime;
-			long loadTime = TimeStatistics.loadCompleteTime - TimeStatistics.loadStartTime;
-			String s = parseTime + "\t" + loadTime + "\n";
+			String s = parseTime + "\n";
 			try {
 //				FileOutputStream fos = getActivity().openFileOutput(filename, Context.MODE_APPEND);
 				FileOutputStream fos = new FileOutputStream(file, true);
@@ -1015,7 +1012,6 @@ public class RenderFragment extends Fragment {
 		protected void onPreExecute() {
 			Toast.makeText(getActivity(), "Loading Mesh...",
 					Toast.LENGTH_SHORT).show();
-			TimeStatistics.loadStartTime = System.currentTimeMillis();
 			TextView text = (TextView) progressDialog.findViewById(R.id.loading_text_id);
 			text.setTextSize(16);
 			text.setTextColor(Color.argb(255, 255, 255, 255));
@@ -1060,10 +1056,13 @@ public class RenderFragment extends Fragment {
 		@Override
 		protected void onPostExecute(Void Result) {
 			elapsedTime.stopTime();
-			TimeStatistics.loadCompleteTime = System.currentTimeMillis();
+			TimeStatistics.parseCompleteTime = System.currentTimeMillis();
 			Toast.makeText(getActivity(), "Done!\nLoading Time: "+ String.format("%.3f",elapsedTime.getElapsedFloat()) + " seconds", Toast.LENGTH_LONG)
 					.show();
-			saveToSDcard();
+			if(MainActivity.isFromMCCam){
+				saveToSDcard();
+				MainActivity.isFromMCCam = false;
+			}
 			TextView text = (TextView) progressDialog.findViewById(R.id.loading_text_id);
 			text.setTextSize(16);
 			text.setText("Done!");
