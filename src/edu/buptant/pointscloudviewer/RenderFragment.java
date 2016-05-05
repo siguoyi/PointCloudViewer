@@ -1,5 +1,6 @@
 package edu.buptant.pointscloudviewer;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -28,6 +29,7 @@ import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -79,6 +81,11 @@ public class RenderFragment extends Fragment {
 	public PointSet pointSet = null;
 	private String file_type;
 	
+	private static String timeStatisticPath = Environment.getExternalStorageDirectory().getAbsolutePath() 
+			+ File.separator +"time_statistic";
+
+	private static File saveTimePath = new File(timeStatisticPath);
+
 	private volatile boolean parsingDone = false;
 	volatile ProgressBar parsingProgress;
 	AlertDialog settingsDialog, explorerDialog, recentDialog, progressDialog, brightnessDialog,
@@ -211,6 +218,9 @@ public class RenderFragment extends Fragment {
 		settingsFrag = new SettingsFragment();
 		explorerFrag = new FileExplorerFragment();
 		getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		if(!saveTimePath.exists()){
+			saveTimePath.mkdirs();
+		}
 		Bundle bundle = getArguments();
 		if(bundle != null){
 			String modelPath = bundle.getString(FileExplorerFragment.fileToParse),
@@ -976,11 +986,21 @@ public class RenderFragment extends Fragment {
 		
 		public void saveToSDcard(){
 			String filename = "time_statistic.txt";
+			String filepath = timeStatisticPath + File.separator + filename;
+			File file = new File(filepath);
+			if(!file.exists()){
+				try {
+					file.createNewFile();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
 			long parseTime = TimeStatistics.parseCompleteTime - TimeStatistics.parseStartTime;
 			long loadTime = TimeStatistics.loadCompleteTime - TimeStatistics.loadStartTime;
 			String s = parseTime + "\t" + loadTime + "\n";
 			try {
-				FileOutputStream fos = getActivity().openFileOutput(filename, Context.MODE_APPEND);
+//				FileOutputStream fos = getActivity().openFileOutput(filename, Context.MODE_APPEND);
+				FileOutputStream fos = new FileOutputStream(file, true);
 				fos.write(s.getBytes());
 				fos.flush();
 				fos.close();
