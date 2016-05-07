@@ -66,6 +66,8 @@ import edu.buptant.statistics.TimeStatistics;
 
 public class RenderFragment extends Fragment {
 	private static final String TAG = RenderFragment.class.getSimpleName();
+	private static final int FROM_MCCAM = 0;
+	private static final int FROM_POINTSCLOUDVIEWER = 1;
 
 	private Context mContext;
 	private CustomGLView mGLView;
@@ -1038,8 +1040,13 @@ public class RenderFragment extends Fragment {
 
 	public class ProgressBarTask extends AsyncTask<Void, Integer, Void> {
 		
-		private void saveCPUToSDcard(){
-			String filename = "cpu_statistics.txt";
+		private void saveCPUToSDcard(int saveType){
+			String filename = "";
+			if(saveType == FROM_MCCAM){
+				filename = "cpu_statistics.txt";
+			}else{
+				filename = "cpu_statistics_1.txt";
+			}
 			
 			String filepath = statisticPath + File.separator + filename;
 			File file = new File(filepath);
@@ -1068,8 +1075,13 @@ public class RenderFragment extends Fragment {
 			}
 		}
 		
-		public void saveTimeToSDcard(){
-			String filename = "time_statistics.txt";
+		public void saveTimeToSDcard(int saveType){
+			String filename = "";
+			if(saveType == FROM_MCCAM){
+				filename = "time_statistics.txt";
+			}else{
+				filename = "time_statistics_1.txt";
+			}
 			String filepath = statisticPath + File.separator + filename;
 			File file = new File(filepath);
 			if(!file.exists()){
@@ -1148,9 +1160,12 @@ public class RenderFragment extends Fragment {
 			Toast.makeText(getActivity(), "Done!\nLoading Time: "+ String.format("%.3f",elapsedTime.getElapsedFloat()) + " seconds", Toast.LENGTH_LONG)
 					.show();
 			if(MainActivity.isFromMCCam){
-				saveTimeToSDcard();
-				saveCPUToSDcard();
+				saveTimeToSDcard(FROM_MCCAM);
+				saveCPUToSDcard(FROM_MCCAM);
 				MainActivity.isFromMCCam = false;
+			}else{
+				saveTimeToSDcard(FROM_POINTSCLOUDVIEWER);
+				saveCPUToSDcard(FROM_POINTSCLOUDVIEWER);
 			}
 			TextView text = (TextView) progressDialog.findViewById(R.id.loading_text_id);
 			text.setTextSize(16);
