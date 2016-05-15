@@ -1060,7 +1060,7 @@ public class RenderFragment extends Fragment {
 			float parseCPU = getProcessCpuRate(CpuStatistics.parse_totalCpuTime1, CpuStatistics.parse_processCpuTime1, 
 									CpuStatistics.parse_totalCpuTime2, CpuStatistics.parse_processCpuTime2);	
 			
-			String s = parseCPU + "%\n";
+			String s = "parse_cpu: " + "\t" +parseCPU + "%\n";
 			Log.d(TAG, "cpu statistics: " + s);
 			
 			try {
@@ -1092,7 +1092,7 @@ public class RenderFragment extends Fragment {
 				}
 			}
 			long parseTime = TimeStatistics.parseCompleteTime - TimeStatistics.parseStartTime;
-			String s = parseTime + "\n";
+			String s = "parse_time: " + "\t" +parseTime + "\n";
 			try {
 //				FileOutputStream fos = getActivity().openFileOutput(filename, Context.MODE_APPEND);
 				FileOutputStream fos = new FileOutputStream(file, true);
