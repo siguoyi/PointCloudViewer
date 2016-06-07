@@ -306,6 +306,7 @@ public class Mesh {
 		Log.d("draw", "meshVerts.length: " + meshVerts.length);
 				
 		//draw!
+		Log.d("type", ""+RendererGL.file_type);
 		if(RendererGL.file_type == 1){
 //			GLES20.glDrawArrays(GLES20.GL_POINTS, 0, 2000);
 			if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
@@ -313,10 +314,6 @@ public class Mesh {
 			}else{
 				GLES20.glDrawArrays(GLES20.GL_POINTS, 0, meshVerts.length/COORDS_PER_VERTEX);
 			}
-//			Log.d("draw", "meshVertBuffer.capacity(): " + meshVerts.length/COORDS_PER_VERTEX);
-//			GLES20.glDrawElements(GLES20.GL_POINTS, meshVerts.length/COORDS_PER_VERTEX, 
-//												GLES20.GL_UNSIGNED_SHORT, 0);
-			GLES20.glDrawArrays(GLES20.GL_POINTS, 0, meshVerts.length/COORDS_PER_VERTEX);
 			
 		}else{
 			GLES20.glDrawArrays(
