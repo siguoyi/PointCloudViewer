@@ -308,9 +308,6 @@ public class Mesh {
 		//draw!
 		if(RendererGL.file_type == 1){
 //			GLES20.glDrawArrays(GLES20.GL_POINTS, 0, 2000);
-//			Log.d("draw", "meshVertBuffer.capacity(): " + meshVerts.length/COORDS_PER_VERTEX);
-//			GLES20.glDrawElements(GLES20.GL_POINTS, meshVerts.length/COORDS_PER_VERTEX, 
-//												GLES20.GL_UNSIGNED_SHORT, 0);
 			if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
 				GLES20.glDrawArrays(GLES20.GL_POINTS, 0, 2000);
 			}else{

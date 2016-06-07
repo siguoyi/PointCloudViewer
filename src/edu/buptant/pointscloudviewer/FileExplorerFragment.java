@@ -262,11 +262,13 @@ public class FileExplorerFragment extends ListFragment implements
 
 	private void getDirectory(String dirPath) {
 		myPath.setText("Current Folder: " + dirPath);
+		Log.d("test", "" + dirPath);
 		currentPath = dirPath;
 
 		itemPath = new LinkedList<String>();
 		fileTypeList = new LinkedList<FileType>();
 		File file = new File(dirPath);
+		Log.d("test", "" + file.exists());
 		File[] fileList = file.listFiles();
 
 		parentPath = file.getParent() + '/';

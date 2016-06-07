@@ -139,7 +139,7 @@ public class MainActivity extends Activity implements FileExplorerFragment.FragT
 					
 					//copy model files into app folder
 //					File appDirectory = new File(Environment.getExternalStorageDirectory().getPath() + "/Android/data/" + getPackageName() + "/files/models");
-					File appDirectory = new File(Environment.getExternalStorageDirectory().getPath() + "/3d");
+					File appDirectory = new File(Environment.getExternalStorageDirectory().getPath() + "/MCCResults");
 					if(!appDirectory.mkdirs()){
 						if (!appDirectory.isDirectory()) {
 							try {
