@@ -308,12 +308,12 @@ public class Mesh {
 		//draw!
 		Log.d("type", ""+RendererGL.file_type);
 		if(RendererGL.file_type == 1){
-//			GLES20.glDrawArrays(GLES20.GL_POINTS, 0, 2000);
-			if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-				GLES20.glDrawArrays(GLES20.GL_POINTS, 0, 2000);
-			}else{
-				GLES20.glDrawArrays(GLES20.GL_POINTS, 0, meshVerts.length/COORDS_PER_VERTEX);
-			}
+			GLES20.glDrawArrays(GLES20.GL_POINTS, 0, meshVerts.length/COORDS_PER_VERTEX);
+//			if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+//				GLES20.glDrawArrays(GLES20.GL_POINTS, 0, 2000);
+//			}else{
+//				GLES20.glDrawArrays(GLES20.GL_POINTS, 0, meshVerts.length/COORDS_PER_VERTEX);
+//			}
 			
 		}else{
 			GLES20.glDrawArrays(

@@ -140,12 +140,6 @@ public class RenderFragment extends Fragment {
 			pointSet = new PointSet(mModelPath, texturePath);
 		}
 		Log.d("filePath", " "+mModelPath);
-		
-//		enableFullscreen();
-
-//		mGLView = new CustomGLView(getActivity());
-
-		// display
 
 		// set up loading bar
 		View progressView = getActivity().getLayoutInflater().inflate(R.layout.progress_bar,
@@ -722,8 +716,8 @@ public class RenderFragment extends Fragment {
 			setEGLContextClientVersion(2);
 			setEGLConfigChooser(8,8,8,8,16,0);
 			// set the Renderer to draw on this surfaceView
-			setRenderer(mRenderer = new RendererGL(context, renderConfig));
-
+			mRenderer = new RendererGL(context, renderConfig);
+			setRenderer(mRenderer);
 			// render only when drawing data changes
 			// frames will not be redrawn unless you call requestRender()
 			setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);

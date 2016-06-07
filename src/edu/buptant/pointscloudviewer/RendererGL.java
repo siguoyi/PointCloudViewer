@@ -114,10 +114,6 @@ public class RendererGL implements GLSurfaceView.Renderer{
 		this.context = context;
 		this.asm = context.getResources().getAssets();
 		renderConfig = configs;
-//		vert = new GShader(asm, "shaders/render.vert", GLES20.GL_VERTEX_SHADER);
-//		frag = new GShader(asm, "shaders/render.frag", GLES20.GL_FRAGMENT_SHADER);
-//		sp = new ShaderProgram(vert, frag);
-//		Mesh.setShaderProgram(mProgramHandle = sp.getHandle());
 		modelMatrixQ = new Quaternion();
 		rotMatrixQ = new Quaternion();
 		freeRotQ = new Quaternion();
@@ -138,25 +134,6 @@ public class RendererGL implements GLSurfaceView.Renderer{
 		Matrix.setIdentityM(mTransMatrix, 0);
 		Matrix.setIdentityM(mMVMatrix, 0);
 		rotationAxis = new Vector3(0.0f, 1.0f, 0.0f);
-		
-//		textBitmap = Bitmap.createBitmap(256, 256, Bitmap.Config.ARGB_8888);
-//		canvas = new Canvas(textBitmap);
-//		textBitmap.eraseColor(0);
-//		textures = new int[1];
-//		textPaint = new Paint();
-//		textPaint.setTextSize(32);
-//		textPaint.setAntiAlias(true);
-//		textPaint.setARGB(255, 255, 255, 255);
-//		canvas.drawText("Hello world", 0, 0, textPaint);
-//		
-//		GLES20.glGenTextures(0, textures, 0);
-//		GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textures[0]);
-//		
-//		GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MIN_FILTER, GLES20.GL_NEAREST);
-//		GLES20.glTexParameteri(GLES20.GL_TEXTURE_2D, GLES20.GL_TEXTURE_MAG_FILTER, GLES20.GL_NEAREST);
-//		GLUtils.texImage2D(GLES20.GL_TEXTURE_2D, 0, textBitmap, 0);
-//		
-//		textBitmap.recycle();
 	}
 
 	@Override
@@ -164,7 +141,6 @@ public class RendererGL implements GLSurfaceView.Renderer{
 		//sets background frame colour
 //		GLES20.glClearColor(0.8f, 0.3f, 0.3f, 1.0f);
 		GLES20.glClearColor(red, green, blue, alpha);
-//		initShaders();
 		
 		vert = new GShader(asm, "shaders/render.vert", GLES20.GL_VERTEX_SHADER);
 		frag = new GShader(asm, "shaders/render.frag", GLES20.GL_FRAGMENT_SHADER);
@@ -246,14 +222,6 @@ public class RendererGL implements GLSurfaceView.Renderer{
 					freeRotQ.normalize();
 					modelMatrixQ = freeRotQ.multiplyThisWith(modelMatrixQ);
 					mModelMatrix = modelMatrixQ.getMatrix();
-
-//					Matrix.setIdentityM(mModelMatrix, 0);
-//					rotMatrixQ.buildFromEuler(yAngle*0.01f*RAD2DEG, xAngle*0.01f*RAD2DEG, zAngle);
-//					rotMatrixQ.normalize();
-//					camOrigin[0] = -4*(float)Math.sin(yAngle*0.01f);
-//					camOrigin[1] = -4*(float)Math.cos(xAngle*0.01f);
-//					camOrigin[2] = -4*(float)Math.cos(xAngle*0.01f)-4*(float)Math.cos(yAngle*0.01f);
-//					LookAt(rotMatrixQ, camOrigin[0], camOrigin[1], camOrigin[2]);
 					break;
 				}
 				default:
@@ -279,10 +247,13 @@ public class RendererGL implements GLSurfaceView.Renderer{
 				
 				Matrix.multiplyMM(mMVMatrix, 0, mViewMatrix, 0, mModelMatrix, 0);
 				Matrix.multiplyMM(mMVPMatrix, 0, mProjMatrix, 0, mMVMatrix, 0);
-				
-				
-				models[i].draw(mMVPMatrix, mMVMatrix, mModelMatrix, mViewMatrix,
-						       renderConfig);
+				final int ii = i;
+				new Thread(){
+					public void run() {
+						models[ii].draw(mMVPMatrix, mMVMatrix, mModelMatrix, mViewMatrix,renderConfig);
+					};
+				}.start();
+//				models[i].draw(mMVPMatrix, mMVMatrix, mModelMatrix, mViewMatrix,renderConfig);
 			}
 		}
 
@@ -411,26 +382,6 @@ public class RendererGL implements GLSurfaceView.Renderer{
 		}
 	}
 	
-//	private void updateModelMatrix(float angleX, float angleY){
-//		accumAngleY += angleY - 
-//	}
-	
-//	private void updateModelMatrix(){
-//		xAccumAngle += xAngle - xLastAngle;
-//		Matrix.rotateM(mModelMatrix, 0, xAccumAngle, 1, 0, 0);
-//		xLastAngle = xAngle;
-//		
-//		yAccumAngle += yAngle - yLastAngle;
-//		Matrix.rotateM(mModelMatrix, 0, yAccumAngle, 0, 1, 0);
-//		yLastAngle = yAngle;
-//		
-//		pinchAccumScale = (pinchLastScale != 0) ? (pinchScaleFactor / pinchLastScale) : 1.0f;
-//		Matrix.scaleM(mModelMatrix, 0, pinchAccumScale,
-//				pinchAccumScale, pinchAccumScale);
-//		pinchLastScale = pinchScaleFactor;
-//	}
-	
-	
 	@Override
 	public void onSurfaceChanged(GL10 unused, int width, int height){
 		GLES20.glViewport(0, 0, width, height);
@@ -448,9 +399,6 @@ public class RendererGL implements GLSurfaceView.Renderer{
 			Matrix.orthoM(mProjMatrix, 0, -ratio, ratio, -1f, 1f, 1.0f, 10f);
 		else
 			Matrix.perspectiveM(mProjMatrix, 0, fovy, ratio, 1.0f, 10.0f);
-		
-//		renderConfig.updateRotationAxis();
-//		rotAxis = renderConfig.getRotationAxis();
 	}
 	
 
