@@ -12,6 +12,7 @@ import android.graphics.BitmapFactory;
 import android.opengl.GLES10;
 import android.opengl.GLES20;
 import android.opengl.GLUtils;
+import android.os.Build;
 import android.util.Log;
 import edu.buptant.pointscloudviewer.RenderFragment.RenderConfig;
 
@@ -307,18 +308,15 @@ public class Mesh {
 		//draw!
 		if(RendererGL.file_type == 1){
 //			GLES20.glDrawArrays(GLES20.GL_POINTS, 0, 2000);
-<<<<<<< HEAD
 			if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
 				GLES20.glDrawArrays(GLES20.GL_POINTS, 0, 2000);
 			}else{
 				GLES20.glDrawArrays(GLES20.GL_POINTS, 0, meshVerts.length/COORDS_PER_VERTEX);
 			}
-=======
 //			Log.d("draw", "meshVertBuffer.capacity(): " + meshVerts.length/COORDS_PER_VERTEX);
 //			GLES20.glDrawElements(GLES20.GL_POINTS, meshVerts.length/COORDS_PER_VERTEX, 
 //												GLES20.GL_UNSIGNED_SHORT, 0);
 			GLES20.glDrawArrays(GLES20.GL_POINTS, 0, meshVerts.length/COORDS_PER_VERTEX);
->>>>>>> parent of ec6abea... add some compat for android5.0+
 			
 		}else{
 			GLES20.glDrawArrays(
